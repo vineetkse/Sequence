@@ -1,8 +1,8 @@
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
+import 'package:sequence/l10n/app_localizations.dart';
 
 import '../../data/models.dart';
 import '../../data/session_repository.dart';
@@ -139,8 +139,8 @@ class _BarReportChart extends StatelessWidget {
         barTouchData: BarTouchData(
           enabled: true,
           touchTooltipData: BarTouchTooltipData(
-            getTooltipColor: (_) => scheme.surfaceContainerHighest,
-            getTooltipItem: (group, _, rod, __) {
+            getTooltipColor: (group) => scheme.surfaceContainerHighest,
+            getTooltipItem: (group, groupIndex, rod, rodIndex) {
               final b = buckets[group.x.toInt()];
               return BarTooltipItem(
                 '${_labelForBucket(context, mode, b.start)}\n${_formatMinutesSeconds(rod.toY.toInt())}',
@@ -210,7 +210,7 @@ String _labelForBucket(BuildContext context, _ReportMode mode, DateTime start) {
   final locale = Localizations.localeOf(context).toLanguageTag();
   return switch (mode) {
     _ReportMode.daily => DateFormat.yMMMd(locale).format(start),
-    _ReportMode.weekly => '${DateFormat.yMMMd(locale).format(start)}',
+    _ReportMode.weekly => DateFormat.yMMMd(locale).format(start),
     _ReportMode.monthly => DateFormat.yMMM(locale).format(start),
   };
 }

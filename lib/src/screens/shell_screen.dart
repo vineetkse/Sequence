@@ -1,6 +1,6 @@
 import 'package:animations/animations.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:sequence/l10n/app_localizations.dart';
 
 import 'reports/reports_screen.dart';
 import 'routines/routines_screen.dart';

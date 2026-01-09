@@ -20,6 +20,7 @@ class RoutinePlayerController extends ChangeNotifier {
 
   Timer? _timer;
   DateTime? _startedAt;
+  DateTime? _backgroundedAt;
   PlayerStatus _status = PlayerStatus.ready;
 
   int _stepIndex = 0;
@@ -71,6 +72,42 @@ class RoutinePlayerController extends ChangeNotifier {
     await _advanceSet(playFeedback: true);
   }
 
+  void onAppBackgrounded() {
+    if (_status == PlayerStatus.running) {
+      _backgroundedAt = DateTime.now();
+    }
+  }
+
+  Future<void> onAppResumed() async {
+    if (_status != PlayerStatus.running) return;
+    final bg = _backgroundedAt;
+    _backgroundedAt = null;
+    if (bg == null) return;
+
+    final deltaSeconds = DateTime.now().difference(bg).inSeconds;
+    if (deltaSeconds <= 0) return;
+
+    await fastForward(deltaSeconds);
+  }
+
+  Future<void> fastForward(int deltaSeconds) async {
+    var remaining = deltaSeconds;
+    while (remaining > 0 && _status == PlayerStatus.running) {
+      if (remaining < _remainingSeconds) {
+        _remainingSeconds -= remaining;
+        remaining = 0;
+        break;
+      }
+
+      remaining -= _remainingSeconds;
+      await _advanceSet(playFeedback: false);
+      if (_status != PlayerStatus.finished) {
+        // _advanceSet resets _remainingSeconds for next set/step.
+      }
+    }
+    notifyListeners();
+  }
+
   Future<void> _tick() async {
     if (_status != PlayerStatus.running) return;
     _remainingSeconds -= 1;
@@ -113,6 +150,12 @@ class RoutinePlayerController extends ChangeNotifier {
 
   void disposeController() {
     _timer?.cancel();
+  }
+
+  @override
+  void dispose() {
+    _timer?.cancel();
+    super.dispose();
   }
 }
 

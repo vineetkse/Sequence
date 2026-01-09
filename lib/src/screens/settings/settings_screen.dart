@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:provider/provider.dart';
+import 'package:sequence/l10n/app_localizations.dart';
 
 import '../../localization/locale_controller.dart';
 
@@ -31,23 +31,39 @@ class SettingsScreen extends StatelessWidget {
                         leading: const Icon(Icons.translate_rounded),
                       ),
                       const Divider(height: 1),
-                      RadioListTile<String?>(
-                        value: null,
+                      RadioGroup<String?>(
                         groupValue: current,
-                        onChanged: (_) => controller.setSystem(),
-                        title: Text(l10n.languageSystem),
-                      ),
-                      RadioListTile<String?>(
-                        value: 'en',
-                        groupValue: current,
-                        onChanged: (_) => controller.setLocale(const Locale('en')),
-                        title: Text(l10n.languageEnglish),
-                      ),
-                      RadioListTile<String?>(
-                        value: 'hi',
-                        groupValue: current,
-                        onChanged: (_) => controller.setLocale(const Locale('hi')),
-                        title: Text(l10n.languageHindi),
+                        onChanged: (value) {
+                          switch (value) {
+                            case null:
+                              controller.setSystem();
+                              break;
+                            case 'en':
+                              controller.setLocale(const Locale('en'));
+                              break;
+                            case 'hi':
+                              controller.setLocale(const Locale('hi'));
+                              break;
+                            default:
+                              controller.setSystem();
+                          }
+                        },
+                        child: Column(
+                          children: [
+                            RadioListTile<String?>(
+                              value: null,
+                              title: Text(l10n.languageSystem),
+                            ),
+                            RadioListTile<String?>(
+                              value: 'en',
+                              title: Text(l10n.languageEnglish),
+                            ),
+                            RadioListTile<String?>(
+                              value: 'hi',
+                              title: Text(l10n.languageHindi),
+                            ),
+                          ],
+                        ),
                       ),
                       const SizedBox(height: 8),
                     ],

@@ -1,8 +1,8 @@
 import 'package:animations/animations.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
+import 'package:sequence/l10n/app_localizations.dart';
 
 import '../../data/models.dart';
 import '../../data/routine_repository.dart';
@@ -63,7 +63,7 @@ class RoutinesScreen extends StatelessWidget {
             padding: const EdgeInsets.fromLTRB(16, 8, 16, 32),
             sliver: SliverList.separated(
               itemBuilder: (context, index) => _RoutineCard(routine: routines[index]),
-              separatorBuilder: (_, __) => const SizedBox(height: 12),
+              separatorBuilder: (context, index) => const SizedBox(height: 12),
               itemCount: routines.length,
             ),
           ),

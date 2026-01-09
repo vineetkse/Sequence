@@ -13,7 +13,7 @@ class AppTheme {
         backgroundColor: scheme.surface,
         surfaceTintColor: scheme.surfaceTint,
       ),
-      cardTheme: CardTheme(
+      cardTheme: CardThemeData(
         elevation: 0,
         color: scheme.surfaceContainerHighest,
         surfaceTintColor: scheme.surfaceTint,

@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
+import 'package:sequence/l10n/app_localizations.dart';
 
 import '../../data/routine_repository.dart';
 import '../../data/session_repository.dart';
 import '../../services/completion_feedback.dart';
+import '../../services/notification_service.dart';
 import 'routine_player_controller.dart';
 
 class RoutinePlayerScreen extends StatefulWidget {
@@ -19,6 +20,38 @@ class RoutinePlayerScreen extends StatefulWidget {
 
 class _RoutinePlayerScreenState extends State<RoutinePlayerScreen> {
   bool _logged = false;
+  late final _lifecycle = _PlayerLifecycleBridge(
+    onBackground: () async {
+      final controller = context.read<RoutinePlayerController>();
+      final notifs = context.read<NotificationService>();
+      controller.onAppBackgrounded();
+      await notifs.cancelAll();
+      await notifs.scheduleSetCompletions(
+            routine: controller.routine,
+            stepIndex: controller.stepIndex,
+            setIndexWithinStep: controller.setIndexWithinStep,
+            remainingSecondsInCurrentSet: controller.remainingSeconds,
+          );
+    },
+    onForeground: () async {
+      final notifs = context.read<NotificationService>();
+      final controller = context.read<RoutinePlayerController>();
+      await notifs.cancelAll();
+      await controller.onAppResumed();
+    },
+  );
+
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addObserver(_lifecycle);
+  }
+
+  @override
+  void dispose() {
+    WidgetsBinding.instance.removeObserver(_lifecycle);
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -37,7 +70,6 @@ class _RoutinePlayerScreenState extends State<RoutinePlayerScreen> {
         routine: routine,
         feedback: const CompletionFeedback(),
       ),
-      dispose: (_, c) => c.disposeController(),
       child: Consumer<RoutinePlayerController>(
         builder: (context, controller, _) {
           if (!_logged && controller.status == PlayerStatus.finished) {
@@ -68,7 +100,7 @@ class _RoutinePlayerScreenState extends State<RoutinePlayerScreen> {
               decoration: BoxDecoration(
                 gradient: LinearGradient(
                   colors: [
-                    scheme.primaryContainer.withOpacity(0.85),
+                    scheme.primaryContainer.withValues(alpha: 0.85),
                     scheme.surface,
                   ],
                   begin: Alignment.topLeft,
@@ -166,7 +198,17 @@ class _Controls extends StatelessWidget {
       children: [
         Expanded(
           child: FilledButton.icon(
-            onPressed: isRunning ? controller.pause : controller.start,
+            onPressed: () async {
+              final notifs = context.read<NotificationService>();
+              await notifs.cancelAll();
+              if (isRunning) {
+                controller.pause();
+                return;
+              }
+              controller.start();
+              // If user immediately backgrounds, notifications will take over;
+              // scheduling is done on background transition.
+            },
             icon: Icon(isRunning ? Icons.pause_rounded : Icons.play_arrow_rounded),
             label: Text(isRunning ? l10n.pause : (controller.status == PlayerStatus.paused ? l10n.resume : l10n.start)),
           ),
@@ -174,7 +216,10 @@ class _Controls extends StatelessWidget {
         const SizedBox(width: 12),
         Expanded(
           child: FilledButton.tonalIcon(
-            onPressed: controller.skip,
+            onPressed: () async {
+              await context.read<NotificationService>().cancelAll();
+              await controller.skip();
+            },
             icon: const Icon(Icons.fast_forward_rounded),
             label: Text(l10n.skip),
           ),
@@ -194,5 +239,28 @@ String _formatMinutesSeconds(int totalSeconds) {
   final m = totalSeconds ~/ 60;
   final s = totalSeconds % 60;
   return '${m.toString().padLeft(2, '0')}:${s.toString().padLeft(2, '0')}';
+}
+
+class _PlayerLifecycleBridge with WidgetsBindingObserver {
+  _PlayerLifecycleBridge({required this.onBackground, required this.onForeground});
+
+  final Future<void> Function() onBackground;
+  final Future<void> Function() onForeground;
+
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    switch (state) {
+      case AppLifecycleState.resumed:
+        onForeground();
+        break;
+      case AppLifecycleState.inactive:
+      case AppLifecycleState.paused:
+        onBackground();
+        break;
+      case AppLifecycleState.detached:
+      case AppLifecycleState.hidden:
+        break;
+    }
+  }
 }
 
