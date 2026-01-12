@@ -1,0 +1,62 @@
+{
+  "@@locale": "en",
+  "appName": "Sequence",
+  "tabRoutines": "Routines",
+  "tabReports": "Reports",
+  "tabSettings": "Settings",
+  "routinesEmptyTitle": "No routines yet",
+  "routinesEmptyBody": "Create your first exercise or meditation sequence.",
+  "createRoutine": "Create routine",
+  "routineTitle": "Title",
+  "routineType": "Type",
+  "routineTypeExercise": "Exercise",
+  "routineTypeMeditation": "Meditation",
+  "steps": "Steps",
+  "addStep": "Add step",
+  "stepName": "Step name",
+  "sets": "Sets",
+  "setDuration": "Set duration",
+  "secondsShort": "{seconds}s",
+  "@secondsShort": {
+    "placeholders": {
+      "seconds": { "type": "int" }
+    }
+  },
+  "minutesSeconds": "{minutes}:{seconds}",
+  "@minutesSeconds": {
+    "placeholders": {
+      "minutes": { "type": "String" },
+      "seconds": { "type": "String" }
+    }
+  },
+  "save": "Save",
+  "edit": "Edit",
+  "cancel": "Cancel",
+  "start": "Start",
+  "resume": "Resume",
+  "pause": "Pause",
+  "skip": "Skip",
+  "done": "Done",
+  "nowPlaying": "Now playing",
+  "setOf": "Set {current} of {total}",
+  "@setOf": {
+    "placeholders": {
+      "current": { "type": "int" },
+      "total": { "type": "int" }
+    }
+  },
+  "reportsTitle": "Exercise report",
+  "daily": "Daily",
+  "weekly": "Weekly",
+  "monthly": "Monthly",
+  "totalTime": "Total time",
+  "settingsTitle": "Settings",
+  "language": "Language",
+  "languageSystem": "System",
+  "languageEnglish": "English",
+  "languageHindi": "Hindi",
+  "delete": "Delete",
+  "confirmDeleteTitle": "Delete routine?",
+  "confirmDeleteBody": "This will remove the routine and keep past history.",
+  "confirm": "Confirm"
+}

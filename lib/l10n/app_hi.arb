@@ -1,0 +1,62 @@
+{
+  "@@locale": "hi",
+  "appName": "सीक्वेंस",
+  "tabRoutines": "रूटीन",
+  "tabReports": "रिपोर्ट",
+  "tabSettings": "सेटिंग्स",
+  "routinesEmptyTitle": "अभी कोई रूटीन नहीं",
+  "routinesEmptyBody": "अपना पहला एक्सरसाइज़ या मेडिटेशन सीक्वेंस बनाएं।",
+  "createRoutine": "रूटीन बनाएं",
+  "routineTitle": "शीर्षक",
+  "routineType": "प्रकार",
+  "routineTypeExercise": "एक्सरसाइज़",
+  "routineTypeMeditation": "ध्यान",
+  "steps": "स्टेप्स",
+  "addStep": "स्टेप जोड़ें",
+  "stepName": "स्टेप का नाम",
+  "sets": "सेट",
+  "setDuration": "सेट अवधि",
+  "secondsShort": "{seconds}से",
+  "@secondsShort": {
+    "placeholders": {
+      "seconds": { "type": "int" }
+    }
+  },
+  "minutesSeconds": "{minutes}:{seconds}",
+  "@minutesSeconds": {
+    "placeholders": {
+      "minutes": { "type": "String" },
+      "seconds": { "type": "String" }
+    }
+  },
+  "save": "सेव",
+  "edit": "एडिट",
+  "cancel": "रद्द करें",
+  "start": "शुरू करें",
+  "resume": "जारी रखें",
+  "pause": "रोकें",
+  "skip": "स्किप",
+  "done": "पूर्ण",
+  "nowPlaying": "चल रहा है",
+  "setOf": "सेट {current} / {total}",
+  "@setOf": {
+    "placeholders": {
+      "current": { "type": "int" },
+      "total": { "type": "int" }
+    }
+  },
+  "reportsTitle": "एक्सरसाइज़ रिपोर्ट",
+  "daily": "दैनिक",
+  "weekly": "साप्ताहिक",
+  "monthly": "मासिक",
+  "totalTime": "कुल समय",
+  "settingsTitle": "सेटिंग्स",
+  "language": "भाषा",
+  "languageSystem": "सिस्टम",
+  "languageEnglish": "अंग्रेज़ी",
+  "languageHindi": "हिंदी",
+  "delete": "डिलीट",
+  "confirmDeleteTitle": "रूटीन डिलीट करें?",
+  "confirmDeleteBody": "यह रूटीन हट जाएगा, लेकिन पुरानी हिस्ट्री रहेगी।",
+  "confirm": "कन्फर्म"
+}
